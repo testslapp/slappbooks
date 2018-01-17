@@ -23,6 +23,7 @@ exports.handler = function (event, context, callback) {
 		if((transaction.amount).toString().startsWith("(") && transaction.amount.toString().endsWith(")")) {
 			transaction.amount = transaction.amount.slice(1, transaction.amount.length-1);
 		} 
+		trasaction.isCredit = transaction.isCredit ? 1 : 0;
 	});
 
 
@@ -40,7 +41,7 @@ exports.handler = function (event, context, callback) {
 		// You can pass the existing connection to this function.
 		// A new connection will be creted if it's not present as the third param 
 
-		let sql = 'INSERT INTO transaction (id, date, entity_id, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach( (transaction, index) => {
 
 			rds.query({
@@ -62,7 +63,7 @@ exports.handler = function (event, context, callback) {
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
-						inserts: [transaction.trId, transaction.date, entity_id, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
+						inserts: [transaction.trId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
