@@ -36,7 +36,7 @@ exports.handler = function (event, context, callback) {
 			// You can pass the existing connection to this function.
 			// A new connection will be creted if it's not present as the third param 
 			rds.query({
-				identifier: 'slappbooksdb',
+				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT count(*) as count FROM transaction;'
 			}, function (error, results, connection) {
 				if (error) {
@@ -74,18 +74,13 @@ exports.handler = function (event, context, callback) {
 							});
 							let finalResult = { rows: transactions, pages: pageNumber}
 							console.log(finalResult);
+							connection.end();
 							callback(null, finalResult);
 						}
-
-						connection.end();
 					}, connection);
 
 				}
-
-				connection.end();
-			});
-
-
+			}, connection);
 		}
 
 	});
