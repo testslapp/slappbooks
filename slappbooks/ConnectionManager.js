@@ -8,6 +8,5 @@ module.exports=function(){
         user: "slappbooksuser",
         password: "12345678",
         database: "slappbooksdb",
-    };
-    
+    };   
     };
