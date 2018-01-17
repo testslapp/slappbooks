@@ -54,7 +54,7 @@ exports.handler = function (event, context, callback) {
 			}
 
 			connection.end();
-		});
+		},connection);
 
 	});
 
