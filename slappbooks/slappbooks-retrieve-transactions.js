@@ -70,7 +70,7 @@ exports.handler = function (event, context, callback) {
 									amount: result.amount,
 									notes: result.notes,
 									reconcile: result.reconcile,
-									setId: result.setId,
+									setId: result.set_id,
 									entityName: entityName
 								});
 							});
