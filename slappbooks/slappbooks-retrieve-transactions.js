@@ -4,7 +4,7 @@ let SL = require('@slappforge/slappforge-sdk');
 const rds = new SL.AWS.RDS(connectionManager);
 exports.handler = function (event, context, callback) {
 	console.log(event);
-	let postObject = event.slice();
+	let postObject = event;
 	let entityName = postObject.entity;
 	let pageNo = postObject.page;
 	let pageSize = postObject.pageSize;
