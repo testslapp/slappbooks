@@ -37,7 +37,7 @@ exports.handler = function (event, context, callback) {
 		// You can pass the existing connection to this function.
 		// A new connection will be creted if it's not present as the third param 
 
-		let sql = 'INSERT INTO transaction (date, entity_id, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (id, date, entity_id, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach( (transaction, index) => {
 
 			rds.query({
@@ -59,7 +59,7 @@ exports.handler = function (event, context, callback) {
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
-						inserts: [transaction.date, entity_id, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
+						inserts: [transaction.trId, transaction.date, entity_id, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
