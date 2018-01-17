@@ -44,7 +44,7 @@ exports.handler = function (event, context, callback) {
 							throw error;
 						} else {
 							console.log("Successfully retreived transactions");
-							let transactions : { rows: results, pages: pageNumber}
+							let transactions = { rows: results, pages: pageNumber}
 							console.log(transactions);
 							callback(null, transactions);
 						}
