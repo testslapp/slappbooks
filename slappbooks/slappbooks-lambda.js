@@ -39,22 +39,27 @@ exports.handler = function (event, context, callback) {
 
 		// Replace the query with the actual query
 		// You can pass the existing connection to this function.
-		// A new connection will be creted if it's not present as the third param 
-		rds.query({
-			instanceIdentifier: 'slappbooksdb',
-			query: 'show tables',
-			transactional: false
-		}, function (error, results, connection) {
-			if (error) {
-				console.log("Error occurred");
-				throw error;
-			} else {
-				console.log("Success")
-				console.log(results);
-			}
+		// A new connection will be creted if it's not present as the third param
 
-			connection.end();
-		},connection);
+		let sql = 'INSERT INTO transaction (date, entity_id, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?, ?, ?, ?, ?, ?);'
+		transactions.forEach(transaction => {
+			rds.query({
+				instanceIdentifier: 'slappbooksdb',
+				query: 'show tables',
+				transactional: false
+			}, function (error, results, connection) {
+				if (error) {
+					connection.rollback();
+					console.log("Error occurred");
+					throw error;
+				} else {
+					console.log("Success")
+					console.log(results);
+				}
+
+				connection.end();
+			},connection);
+		});
 
 	});
 
