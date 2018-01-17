@@ -20,21 +20,36 @@ exports.handler = function (event, context, callback) {
 	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?';
 
 	rds.query({
-				instanceIdentifier: 'slappbooksdb',
-				query: 'SELECT id FROM entity WHERE name = ?',
-				inserts: [entityName]
+		instanceIdentifier: 'slappbooksdb',
+		query: 'SELECT id FROM entity WHERE name = ?',
+		inserts: [entityName]
+	}, function (error, results, connection) {
+		if (error) {
+			console.log("Error occurred while retreiving the entity id from the database", error);
+			throw error;
+		} else {
+			console.log("Successfully retrieved the entity id")
+			let entity_id = results[0].id;
+			console.log(entity_id, startIndex, endIndex);
+
+			// Replace the query with the actual query
+			// You can pass the existing connection to this function.
+			// A new connection will be creted if it's not present as the third param 
+			rds.query({
+				identifier: 'slappbooksdb',
+				query: 'SELECT count(*) as count FROM transaction;'
 			}, function (error, results, connection) {
 				if (error) {
-					console.log("Error occurred while retreiving the entity id from the database", error);
+					console.log("Error occurred while retrieving count");
 					throw error;
 				} else {
-					console.log("Successfully retrieved the entity id")
-					let entity_id = results[0].id;
-					console.log(entity_id, startIndex, endIndex);
+					console.log("Successfully obtained database count");
+					pageNumber = +(results.count) / +pageSize;
+					
 					// Replace the query with the actual query
 					// You can pass the existing connection to this function.
 					// A new connection will be creted if it's not present as the third param 
-					rds.query({
+						rds.query({
 						instanceIdentifier: 'slappbooksdb',
 						query: sql,
 						inserts: [entity_id, startIndex, endIndex]
@@ -67,7 +82,13 @@ exports.handler = function (event, context, callback) {
 
 				}
 
+				connection.end();
 			});
+
+
+		}
+
+	});
 
 
 	/* let transactions = {
