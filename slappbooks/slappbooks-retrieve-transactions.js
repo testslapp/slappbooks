@@ -43,7 +43,7 @@ exports.handler = function (event, context, callback) {
 					throw error;
 				} else {
 					console.log("Successfully obtained database count");
-					console.log(results.count);
+					console.log(results);
 					pageNumber = parseFloat(results.count) / parseFloat(pageSize);
 					
 					// Replace the query with the actual query
