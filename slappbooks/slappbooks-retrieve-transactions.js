@@ -16,7 +16,7 @@ exports.handler = function (event, context, callback) {
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT id, transaction_id FROM transaction WHERE entity_id = ? LIMIT ?,?';
+	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?';
 
 	rds.query({
 				instanceIdentifier: 'slappbooksdb',
@@ -29,7 +29,7 @@ exports.handler = function (event, context, callback) {
 				} else {
 					console.log("Successfully retrieved the entity id")
 					let entity_id = results[0].id;
-					
+					console.log(entity_id, startIndex, endIndex);
 					// Replace the query with the actual query
 					// You can pass the existing connection to this function.
 					// A new connection will be creted if it's not present as the third param 
