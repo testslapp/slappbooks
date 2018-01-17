@@ -7,7 +7,7 @@ exports.handler = function (event, context, callback) {
 
 
     
-    sql = 'SELECT T.transaction_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name FROM transaction T INNER JOIN entity E on T.entity_id=E.id where T.transaction_id=?;';    
+    sql = 'SELECT T.transaction_id, T.set_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name FROM transaction T INNER JOIN entity E on T.entity_id=E.id where T.set_id=?;';    
     // Replace the query with the actual query
     // You can pass the existing connection to this function.
     // A new connection will be creted if it's not present as the third param 
@@ -17,7 +17,7 @@ exports.handler = function (event, context, callback) {
         inserts: [transactionId]
     }, function (error, results, connection) {
         if (error) {
-            console.log("Error occurred while retrieving the transaction with id", transactionId, error);
+            console.log("Error occurred while retrieving the transaction with set_id", transactionId, error);
             throw error;
         } else {
             console.log("Successfully retrieved the transaction")
@@ -26,6 +26,7 @@ exports.handler = function (event, context, callback) {
             results.forEach(result => {
                 transactions.push({
                     trId: result.transaction_id,
+                    setId: result.setId,
                     date: result.date,
                     checkNo: result.cheque_no,
                     voucherNo: result.voucher_no,
