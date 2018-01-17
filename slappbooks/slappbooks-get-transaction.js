@@ -32,8 +32,8 @@ exports.handler = function (event, context, callback) {
                     isCredit: result.is_credit,
                     amount: result.amount,
                     notes: result.notes,
-                    reconcile: results.reconcile,
-                    entityName: results.name
+                    reconcile: result.reconcile,
+                    entityName: result.name
                 });
             });
             console.log(transactions);
