@@ -44,7 +44,7 @@ exports.handler = function (event, context, callback) {
 				} else {
 					console.log("Successfully obtained database count");
 					console.log(results[0].count);
-					pageNumber = parseFloat(results[0].count) / parseFloat(pageSize);
+					pageNumber = Math.ceil(parseFloat(results[0].count) / parseFloat(pageSize));
 					
 					// Replace the query with the actual query
 					// You can pass the existing connection to this function.
