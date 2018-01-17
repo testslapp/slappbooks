@@ -38,7 +38,7 @@ exports.handler = function (event, context, callback) {
 		// A new connection will be creted if it's not present as the third param 
 
 		let sql = 'INSERT INTO transaction (date, entity_id, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?, ?, ?, ?, ?, ?);'
-		transactions.forEach(transaction => {
+		transactions.forEach( (transaction, index) => {
 
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
@@ -70,16 +70,16 @@ exports.handler = function (event, context, callback) {
 							console.log(results);
 						}
 
-						connection.end();
+						if(index === transactions.length) {
+							connection.end();
+						}
 					}, connection);
 
 				}
 
-				connection.end();
 			}, connection);
 
 			connection.commit();
-			connection.end();
 		});
 
 	});
