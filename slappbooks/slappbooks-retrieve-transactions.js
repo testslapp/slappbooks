@@ -42,8 +42,9 @@ exports.handler = function (event, context, callback) {
 							console.log("Error occurred while retreiving transactions", error);
 							throw error;
 						} else {
-							console.log("Successfully retreived transactions")
+							console.log("Successfully retreived transactions");
 							console.log(results);
+							callback(null, transactions);
 						}
 
 						connection.end();
