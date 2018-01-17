@@ -30,7 +30,6 @@ exports.handler = function (event, context, callback) {
 		} else {
 			console.log("Successfully retrieved the entity id")
 			let entity_id = results[0].id;
-			console.log(entity_id, startIndex, endIndex);
 
 			// Replace the query with the actual query
 			// You can pass the existing connection to this function.
@@ -44,7 +43,8 @@ exports.handler = function (event, context, callback) {
 					throw error;
 				} else {
 					console.log("Successfully obtained database count");
-					pageNumber = +(results.count) / +pageSize;
+					console.log(results.count);
+					pageNumber = parseFloat(results.count) / parseFloat(pageSize);
 					
 					// Replace the query with the actual query
 					// You can pass the existing connection to this function.
