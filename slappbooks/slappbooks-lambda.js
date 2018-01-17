@@ -23,7 +23,7 @@ exports.handler = function (event, context, callback) {
 		if((transaction.amount).toString().startsWith("(") && transaction.amount.toString().endsWith(")")) {
 			transaction.amount = transaction.amount.slice(1, transaction.amount.length-1);
 		} 
-		trasaction.isCredit = transaction.isCredit ? 1 : 0;
+		transaction.isCredit = transaction.isCredit ? 1 : 0;
 	});
 
 
