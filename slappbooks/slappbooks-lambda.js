@@ -50,21 +50,45 @@ exports.handler = function (event, context, callback) {
 		transactions.forEach(transaction => {
 
 			rds.query({
-			instanceIdentifier: 'slappbooksdb',
-			query: 'SELECT id FROM entity WHERE name = ?',
-			transactional: false,
-			inserts: [transaction.entityName]
-		}, function (error, results, connection) {
-			if (error) {
-				console.log("Error occurred");
-				throw error;
-			} else {
-				console.log("Success")
-				console.log(results[0].id);
-			}
+				instanceIdentifier: 'slappbooksdb',
+				query: 'SELECT id FROM entity WHERE name = ?',
+				inserts: [transaction.entityName]
+			}, function (error, results, connection) {
+				if (error) {
+					console.log("Error occurred");
+					connection.rollback();
+					throw error;
+				} else {
+					console.log("Success")
+					let entity_id = results[0].id;
 
+					// Replace the query with the actual query
+					// You can pass the existing connection to this function.
+					// A new connection will be creted if it's not present as the third param 
+					rds.query({
+						identifier: 'slappbooksdb',
+						query: sql,
+						inserts: [transaction.date, entity_id, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
+					}, function (error, results, connection) {
+						if (error) {
+							connection.rollback();
+							console.log("Error occurred");
+							throw error;
+						} else {
+							console.log("Success")
+							console.log(results);
+						}
+
+						connection.end();
+					}, connection);
+
+				}
+
+				connection.end();
+			}, connection);
+
+			connection.commit();
 			connection.end();
-		}, connection);
 		});
 
 	});
