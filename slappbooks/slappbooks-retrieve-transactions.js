@@ -43,10 +43,23 @@ exports.handler = function (event, context, callback) {
 							console.log("Error occurred while retreiving transactions", error);
 							throw error;
 						} else {
+							let transactions = [];
 							console.log("Successfully retreived transactions");
-							let transactions = { rows: results, pages: pageNumber}
-							console.log(transactions);
-							callback(null, transactions);
+							results.forEach(result => {
+								transactions.push({
+									trId: result.transaction_id,
+									checkNo: result.cheque_no,
+									voucherNo: result.voucher_no,
+									isCredit: result.is_credit,
+									amount: result.amount,
+									notes: result.notes,
+									reconcile: results.reconcile,
+									entityName: entityName
+								});
+							});
+							let finalResult = { rows: transactions, pages: pageNumber}
+							console.log(finalResult);
+							callback(null, finalResult);
 						}
 
 						connection.end();
@@ -57,10 +70,10 @@ exports.handler = function (event, context, callback) {
 			});
 
 
-	let transactions = {
+	/* let transactions = {
 		rows: [{ date: '01/16/2018', checkNo: '', notes: '', amount: 100, isCredit: false, entityName: 'Cash', trId: '12345678' },
 		{ date: '01/16/2018', checkNo: '', notes: '', amount: '(100)', isCredit: true, entityName: 'Bank', trId: '87654321' }],
 		pages: 1
 	};
-	callback(null, transactions);
+	callback(null, transactions); */
 }
