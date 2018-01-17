@@ -60,7 +60,7 @@ exports.handler = function (event, context, callback) {
 				throw error;
 			} else {
 				console.log("Success")
-				console.log(results);
+				console.log(results[0].id);
 			}
 
 			connection.end();
