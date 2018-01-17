@@ -41,7 +41,7 @@ exports.handler = function (event, context, callback) {
 		// You can pass the existing connection to this function.
 		// A new connection will be creted if it's not present as the third param 
 
-		let sql = 'INSERT INTO transaction (id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (transaction_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach( (transaction, index) => {
 
 			rds.query({
