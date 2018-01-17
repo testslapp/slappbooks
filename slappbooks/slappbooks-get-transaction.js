@@ -36,8 +36,7 @@ exports.handler = function (event, context, callback) {
                     entityName: results.name
                 });
             });
-            let finalResult = { rows: transactions, pages: pageNumber}
-            console.log(finalResult);
+            console.log(transactions);
             connection.end();
              callback(null, {
                         "statusCode": 200,
@@ -45,7 +44,7 @@ exports.handler = function (event, context, callback) {
                             "my_header": "my_value",
                             "Access-Control-Allow-Origin": "*"
                         },
-                        "body": JSON.stringify(trs),
+                        "body": JSON.stringify(transactions),
                         "isBase64Encoded": false
                     });
         }
