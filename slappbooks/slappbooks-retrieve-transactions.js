@@ -63,6 +63,7 @@ exports.handler = function (event, context, callback) {
 							results.forEach(result => {
 								transactions.push({
 									trId: result.transaction_id,
+									date: result.date,
 									checkNo: result.cheque_no,
 									voucherNo: result.voucher_no,
 									isCredit: result.is_credit,
