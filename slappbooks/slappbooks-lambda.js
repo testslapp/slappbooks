@@ -52,7 +52,7 @@ exports.handler = function (event, context, callback) {
 				} else {
 					console.log("Successfully retrieved the entity id")
 					let entity_id = results[0].id;
-
+					console.log(transaction.trId);
 					// Replace the query with the actual query
 					// You can pass the existing connection to this function.
 					// A new connection will be creted if it's not present as the third param 
