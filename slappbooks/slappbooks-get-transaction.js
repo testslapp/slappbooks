@@ -8,7 +8,7 @@ exports.handler = function (event, context, callback) {
 
     
     sql = 'SELECT T.transaction_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name' +
-     'FROM transaction T INNER JOIN entity E on T.entity_id=E.id where T.transaction_id=? and E.name=?';    
+     'FROM transaction T INNER JOIN entity E on T.entity_id=E.id where T.transaction_id=?;';    
     // Replace the query with the actual query
     // You can pass the existing connection to this function.
     // A new connection will be creted if it's not present as the third param 
