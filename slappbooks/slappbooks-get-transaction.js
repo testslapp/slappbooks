@@ -8,7 +8,8 @@ exports.handler = function(event, context, callback) {
     callback(null, {
         "statusCode": 200,
         "headers": {
-            "my_header": "my_value"
+            "my_header": "my_value",
+            "Access-Control-Allow-Origin": "*"
         },
         "body": JSON.stringify(trs),
         "isBase64Encoded": false
