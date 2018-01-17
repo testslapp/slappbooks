@@ -52,7 +52,7 @@ exports.handler = function (event, context, callback) {
 						rds.query({
 						instanceIdentifier: 'slappbooksdb',
 						query: sql,
-						inserts: [entity_id, startIndex, endIndex]
+						inserts: [entity_id, startIndex, pageSize]
 					}, function (error, results, connection) {
 						if (error) {
 							console.log("Error occurred while retreiving transactions", error);
