@@ -12,25 +12,47 @@ exports.handler = function (event, context, callback) {
 	let filtered = postObject.filtered;
 	let startIndex = +pageNo * +pageSize;
 	let endIndex = startIndex + pageSize;
+	console.log(pageSize, pageNo, startIndex, endIndex);
 
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?'
-	rds.query({
-		identifier: 'slappbooksdb',
-		query: '<query>'
-	}, function (error, results, connection) {
-		if (error) {
-			console.log("Error occurred");
-			throw error;
-		} else {
-			console.log("Success")
-			console.log(results);
-		}
+	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?';
 
-		connection.end();
-	});
+	rds.query({
+				instanceIdentifier: 'slappbooksdb',
+				query: 'SELECT id FROM entity WHERE name = ?',
+				inserts: [transaction.entityName]
+			}, function (error, results, connection) {
+				if (error) {
+					console.log("Error occurred while retreiving the entity id from the database", error);
+					throw error;
+				} else {
+					console.log("Successfully retrieved the entity id")
+					let entity_id = results[0].id;
+					console.log(transaction.trId);
+					// Replace the query with the actual query
+					// You can pass the existing connection to this function.
+					// A new connection will be creted if it's not present as the third param 
+					rds.query({
+						instanceIdentifier: 'slappbooksdb',
+						query: sql,
+						inserts: [entity_id, startIndex, endIndex]
+					}, function (error, results, connection) {
+						if (error) {
+							console.log("Error occurred while retreiving transactions", error);
+							throw error;
+						} else {
+							console.log("Success")
+							console.log(results);
+						}
+
+						connection.end();
+					});
+
+				}
+
+			}, connection);
 
 
 	let transactions = {
