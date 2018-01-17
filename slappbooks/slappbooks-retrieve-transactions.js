@@ -12,12 +12,11 @@ exports.handler = function (event, context, callback) {
 	let filtered = postObject.filtered;
 	let startIndex = +pageNo * +pageSize;
 	let endIndex = startIndex + pageSize;
-	console.log(pageSize, pageNo, startIndex, endIndex);
 
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?';
+	let sql = 'SELECT id, transaction_id FROM transaction WHERE entity_id = ? LIMIT ?,?';
 
 	rds.query({
 				instanceIdentifier: 'slappbooksdb',
@@ -43,7 +42,7 @@ exports.handler = function (event, context, callback) {
 							console.log("Error occurred while retreiving transactions", error);
 							throw error;
 						} else {
-							console.log("Success")
+							console.log("Successfully retreived transactions")
 							console.log(results);
 						}
 
