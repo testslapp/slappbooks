@@ -20,6 +20,9 @@ exports.handler = function (event, context, callback) {
 		amounts.push(transaction.amount);
 		creditArray.push(transaction.isCredit);
 		entityNames.push(transaction.entityName);
+		if((transaction.amount).toString().startsWith("(") && transaction.amount.toString().endsWith(")")) {
+			transaction.amount = transaction.amount.slice(1, transaction.amount.length-1);
+		} 
 	});
 
 
