@@ -12,6 +12,7 @@ exports.handler = function (event, context, callback) {
 	let filtered = postObject.filtered;
 	let startIndex = +pageNo * +pageSize;
 	let endIndex = startIndex + pageSize;
+	let pageNumber = 1;
 
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
@@ -43,7 +44,8 @@ exports.handler = function (event, context, callback) {
 							throw error;
 						} else {
 							console.log("Successfully retreived transactions");
-							console.log(results);
+							let transactions : { rows: results, pages: pageNumber}
+							console.log(transactions);
 							callback(null, transactions);
 						}
 
