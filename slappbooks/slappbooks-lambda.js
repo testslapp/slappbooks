@@ -22,15 +22,6 @@ exports.handler = function (event, context, callback) {
 		entityNames.push(transaction.entityName);
 	});
 
-	console.log(transactions);
-	console.log(dates);
-	console.log(amounts);
-	console.log(checkNo);
-	console.log(notes);
-	console.log(amounts);
-	console.log(creditArray);
-	console.log(entityNames);
-
 
 	rds.beginTransaction({
 		instanceIdentifier: 'slappbooksdb'
@@ -55,11 +46,11 @@ exports.handler = function (event, context, callback) {
 				inserts: [transaction.entityName]
 			}, function (error, results, connection) {
 				if (error) {
-					console.log("Error occurred");
+					console.log("Error occurred while retreiving the entity id from the database", error);
 					connection.rollback();
 					throw error;
 				} else {
-					console.log("Success")
+					console.log("Successfully retrieved the entity id")
 					let entity_id = results[0].id;
 
 					// Replace the query with the actual query
@@ -72,10 +63,10 @@ exports.handler = function (event, context, callback) {
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
-							console.log("Error occurred");
+							console.log("Error occurred while inserting the transaction", error);
 							throw error;
 						} else {
-							console.log("Success")
+							console.log("Successfully inserted the transaction")
 							console.log(results);
 						}
 
