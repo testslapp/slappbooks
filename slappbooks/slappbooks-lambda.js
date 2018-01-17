@@ -33,7 +33,7 @@ exports.handler = function (event, context, callback) {
 
 
 	rds.beginTransaction({
-		identifier: 'slappbooksdb'
+		instanceIdentifier: 'slappbooksdb'
 	}, function (error, connection) {
 		if (error) { throw err; }
 
@@ -41,7 +41,7 @@ exports.handler = function (event, context, callback) {
 		// You can pass the existing connection to this function.
 		// A new connection will be creted if it's not present as the third param 
 		rds.query({
-			identifier: 'slappbooksdb',
+			instanceIdentifier: 'slappbooksdb',
 			query: 'show tables',
 			transactional: false
 		}, function (error, results, connection) {
