@@ -10,7 +10,7 @@ exports.handler = function (event, context, callback) {
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
 	rds.query({
-		identifier: 'slappbooksdb',
+		instanceIdentifier: 'slappbooksdb',
 		query: sql,
 		inserts: [entity.entity, entity.currency, entity.entityType]
 	}, function (error, results, connection) {
