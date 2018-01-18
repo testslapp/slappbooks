@@ -22,7 +22,6 @@ exports.handler = function (event, context, callback) {
         } else {
             console.log("Successfully retrieved the transaction")
             let transactions = [];
-            console.log("Successfully retreived transactions");
             results.forEach(result => {
                 transactions.push({
                     trId: result.transaction_id,

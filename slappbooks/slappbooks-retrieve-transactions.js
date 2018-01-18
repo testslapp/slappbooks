@@ -17,19 +17,8 @@ exports.handler = function (event, context, callback) {
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT * FROM transaction WHERE entity_id = ? LIMIT ?,?';
+	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? LIMIT ?,?';
 
-	rds.query({
-		instanceIdentifier: 'slappbooksdb',
-		query: 'SELECT id FROM entity WHERE name = ?',
-		inserts: [entityName]
-	}, function (error, results, connection) {
-		if (error) {
-			console.log("Error occurred while retreiving the entity id from the database", error);
-			throw error;
-		} else {
-			console.log("Successfully retrieved the entity id")
-			let entity_id = results[0].id;
 
 			// Replace the query with the actual query
 			// You can pass the existing connection to this function.
@@ -52,7 +41,7 @@ exports.handler = function (event, context, callback) {
 						rds.query({
 						instanceIdentifier: 'slappbooksdb',
 						query: sql,
-						inserts: [entity_id, startIndex, pageSize]
+						inserts: [entityName, startIndex, pageSize]
 					}, function (error, results, connection) {
 						if (error) {
 							console.log("Error occurred while retreiving transactions", error);
@@ -83,9 +72,6 @@ exports.handler = function (event, context, callback) {
 
 				}
 			}, connection);
-		}
-
-	});
 
 
 	/* let transactions = {
