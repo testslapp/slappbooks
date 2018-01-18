@@ -26,6 +26,7 @@ exports.handler = function (event, context, callback) {
 					defaultCurrency: result.currency
 				});
 			});
+			console.log(entities);
 			connection.end();
 			callback(null, {
 					"statusCode": 200,
@@ -37,8 +38,6 @@ exports.handler = function (event, context, callback) {
 					"isBase64Encoded": false
 				});
 		}
-
-		connection.end();
 	});
 
 	callback(null, 'Successfully executed');
