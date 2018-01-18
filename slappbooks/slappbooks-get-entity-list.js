@@ -28,7 +28,7 @@ exports.handler = function (event, context, callback) {
 			});
 			console.log(entities);
 			connection.end();
-			callback(null, {
+			callback(error, {
 					"statusCode": 200,
 					"headers": {
 						"my_header": "my_value",
