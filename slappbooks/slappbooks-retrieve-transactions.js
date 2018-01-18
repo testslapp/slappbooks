@@ -71,7 +71,7 @@ exports.handler = function (event, context, callback) {
 					}, connection);
 
 				}
-			}, connection);
+			});
 
 
 	/* let transactions = {
