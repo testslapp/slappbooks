@@ -9,12 +9,6 @@ exports.handler = function (event, context, callback) {
 	conversions = postObject.conversions;
 
 	transactions.forEach((transaction, index) => {
-		dates.push(transaction.date);
-		checkNo.push(transaction.checkNo);
-		notes.push(transaction.notes);
-		amounts.push(transaction.amount);
-		creditArray.push(transaction.isCredit);
-		entityNames.push(transaction.entityName);
 		if ((transaction.amount).toString().startsWith("(") && transaction.amount.toString().endsWith(")")) {
 			transaction.amount = transaction.amount.slice(1, transaction.amount.length - 1);
 		}
