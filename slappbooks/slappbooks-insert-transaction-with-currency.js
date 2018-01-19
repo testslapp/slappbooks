@@ -4,8 +4,7 @@ let SL = require('@slappforge/slappforge-sdk');
 const rds = new SL.AWS.RDS(connectionManager);
 exports.handler = function (event, context, callback) {
 
-	postObject = event.slice();
-
+	postObject = event;
 	transactions = postObject.transactions;
 	conversions = postObject.conversions;
 
