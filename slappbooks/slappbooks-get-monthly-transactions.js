@@ -15,6 +15,17 @@ exports.handler = function (event, context, callback) {
 	let year = postObject.year;
 	let month = postObject.month;
 
+	switch(month) {
+		case "January":
+			month = '01';
+			break;
+		case "February":
+			month = '02';
+			break;
+		default:
+			month = '01';
+	}
+
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
@@ -26,7 +37,8 @@ exports.handler = function (event, context, callback) {
 	// A new connection will be creted if it's not present as the third param 
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
-		query: 'SELECT count(*) as count FROM transaction;'
+		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ?;',
+		inserets: [entityName]
 	}, function (error, results, connection) {
 		if (error) {
 			console.log("Error occurred while retrieving count");
