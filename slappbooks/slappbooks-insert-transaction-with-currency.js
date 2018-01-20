@@ -7,7 +7,7 @@ exports.handler = function (event, context, callback) {
 	postObject = event;
 	transactions = postObject.transactions;
 	let conversions = [];
-	conversions = postObject.conversions.slice();
+	conversions = postObject.conversions;
 	console.log(conversions);
 
 	transactions.forEach((transaction, index) => {
