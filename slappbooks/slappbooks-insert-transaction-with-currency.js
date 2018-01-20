@@ -71,7 +71,7 @@ exports.handler = function (event, context, callback) {
 							rds.query({
 								instanceIdentifier: 'slappbooksdb',
 								query: sql,
-								inserts: [transaction.trId, conversions[index].toCurrency,  conversions[index].fromCurrency, conversions[index].conversionRate]
+								inserts: [transaction.trId, conversions[index]._toCurrency,  conversions[index]._fromCurrency, conversions[index]._conversionRate]
 							}, function (error, results, connection) {
 								if (error) {
 									connection.rollback();
