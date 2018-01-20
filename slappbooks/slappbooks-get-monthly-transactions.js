@@ -99,8 +99,10 @@ exports.handler = function (event, context, callback) {
 										console.log("Successfully retrieved credit transactions");
 										console.log(resultCredit);
 										let credit = resultCredit[0].credit;
+										credit = credit === null ? 0 : credit;
+										debit = debit === null ? 0 : debit;
 										transactions.push({
-											trId: result.transaction_id,
+											trId: '00000000000000000',
 											date: year.concat("-").concat(month).concat("-01"),
 											isCredit: (+debit - +credit) < 0 ? 1 : 0,
 											amount: (+debit - +credit),
