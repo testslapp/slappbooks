@@ -17,7 +17,7 @@ exports.handler = function (event, context, callback) {
 		// A new connection will be creted if it's not present as the third param 
 		rds.query({
 			instanceIdentifier: 'slappbooksdb',
-			query: 'sql',
+			query: sql,
 			inserts: [setId]
 		}, function (error, results, connection) {
 			if (error) {
