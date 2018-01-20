@@ -29,7 +29,7 @@ exports.handler = function (event, context, callback) {
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date BETWEEN ?-?-01 AND ?-?-31  LIMIT ?,?';
+	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name =? AND date BETWEEN ?-?-01 AND ?-?-31  LIMIT ?,?';
 
 
 	// Replace the query with the actual query
@@ -37,7 +37,7 @@ exports.handler = function (event, context, callback) {
 	// A new connection will be creted if it's not present as the third param 
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
-		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ?;',
+		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name=?;',
 		inserets: [entityName]
 	}, function (error, results, connection) {
 		if (error) {
