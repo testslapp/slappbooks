@@ -38,7 +38,7 @@ exports.handler = function (event, context, callback) {
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
 		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name=?',
-		inserets: [entityName]
+		inserts: [entityName]
 	}, function (error, results, connection) {
 		if (error) {
 			console.log("Error occurred while retrieving count");
