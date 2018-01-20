@@ -29,7 +29,7 @@ exports.handler = function (event, context, callback) {
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
-	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name =? AND date BETWEEN ?-?-01 AND ?-?-31  LIMIT ?,?';
+	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name =? AND date BETWEEN ? AND ?  LIMIT ?,?';
 	console.log(month);
 	console.log(year);
 
@@ -55,7 +55,7 @@ exports.handler = function (event, context, callback) {
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: sql,
-				inserts: [entityName, year, month, year, month, startIndex, pageSize]
+				inserts: [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31"), startIndex, pageSize]
 			}, function (error, results, connection) {
 				if (error) {
 					console.log("Error occurred while retreiving transactions", error);
