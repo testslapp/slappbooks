@@ -62,6 +62,8 @@ exports.handler = function (event, context, callback) {
 					throw error;
 				} else {
 					let transactions = [];
+					transactionResult = results;
+					console.log(transactionResult);
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
@@ -108,8 +110,8 @@ exports.handler = function (event, context, callback) {
 											amount: (+debit - +credit),
 											entityName: entityName
 										});
-										console.log(results);
-										results.forEach(result => {
+										console.log(transactionResult);
+										transactionResult.forEach(result => {
 										transactions.push({
 											trId: result.transaction_id,
 											date: result.date,
