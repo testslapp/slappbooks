@@ -105,6 +105,7 @@ exports.handler = function (event, context, callback) {
 										debit = debit === null ? 0 : debit;
 										transactions.push({
 											trId: '00000000000000000',
+											notes: 'Balance Brought Forward',
 											date: year.concat("-").concat(month).concat("-01"),
 											isCredit: (+debit - +credit) < 0 ? 1 : 0,
 											amount: (+debit - +credit),
