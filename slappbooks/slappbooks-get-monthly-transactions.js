@@ -22,6 +22,9 @@ exports.handler = function (event, context, callback) {
 		case "February":
 			month = '02';
 			break;
+		case "December":
+			month = '12';
+			break;
 		default:
 			month = '01';
 	}
