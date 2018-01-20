@@ -30,7 +30,8 @@ exports.handler = function (event, context, callback) {
 	// You can pass the existing connection to this function.
 	// A new connection will be creted if it's not present as the third param 
 	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name =? AND date BETWEEN ?-?-01 AND ?-?-31  LIMIT ?,?';
-
+	console.log(month);
+	console.log(year);
 
 	// Replace the query with the actual query
 	// You can pass the existing connection to this function.
@@ -64,8 +65,8 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
-						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 0 AND date < ?-?-01';
-						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 1 AND date < ?-?-01';
+						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 0 AND date < ?-?-31';
+						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 1 AND date < ?-?-31';
 						// Replace the query with the actual query
 						// You can pass the existing connection to this function.
 						// A new connection will be creted if it's not present as the third param 
