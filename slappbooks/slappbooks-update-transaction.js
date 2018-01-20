@@ -23,7 +23,7 @@ exports.handler = function (event, context, callback) {
 		// A new connection will be creted if it's not present as the third param 
 
 		let sql = 'UPDATE transaction SET transaction_id=?, set_id=?, date=?, entity_id=?, is_credit=?, cheque_no=?, voucher_no=?, amount=?, notes=?, reconcile=? WHERE transaction_id=?';
-		transaction.forEach(transaction => {
+		transactions.forEach(transaction => {
 				rds.query({
 					instanceIdentifier: 'slappbooksdb',
 					query: sql,
