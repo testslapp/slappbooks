@@ -65,15 +65,15 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
-						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 0 AND date < ?-?-31';
-						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 1 AND date < ?-?-31';
+						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 0 AND date < ?';
+						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 1 AND date < ?';
 						// Replace the query with the actual query
 						// You can pass the existing connection to this function.
 						// A new connection will be creted if it's not present as the third param 
 						rds.query({
 							instanceIdentifier: 'slappbooksdb',
 							query: debitSql,
-							inserts: [entityName, year, month]
+							inserts: [entityName, year.concat("-").concat(month).concat("-01")]
 						}, function (error, resultDebit, connection) {
 							if (error) {
 								console.log("Error occurred while counting debit transactions", error);
@@ -90,10 +90,10 @@ exports.handler = function (event, context, callback) {
 								rds.query({
 									instanceIdentifier: 'slappbooksdb',
 									query: creditSql,
-									inserts: [entityName, year, month]
+									inserts: [entityName, year.concat("-").concat(month).concat("-01")]
 								}, function (error, resultCredit, connection) {
 									if (error) {
-										console.log("Error occurred while counting credti transactions", error);
+										console.log("Error occurred while counting credit transactions", error);
 										throw error;
 									} else {
 										console.log("Successfully retrieved credit transactions");
