@@ -11,7 +11,7 @@ exports.handler = function (event, context, callback) {
 		if (error) { throw err; }
 
 
-		let sql = 'DELETE FROM transaction WHERE setId=?';
+		let sql = 'DELETE FROM transaction WHERE set_id=?';
 		// Replace the query with the actual query
 		// You can pass the existing connection to this function.
 		// A new connection will be creted if it's not present as the third param 
