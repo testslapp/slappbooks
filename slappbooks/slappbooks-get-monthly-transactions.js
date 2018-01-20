@@ -138,7 +138,7 @@ exports.handler = function (event, context, callback) {
 											notes: 'Balance Brought Forward',
 											date: year.concat("-").concat(month).concat("-01"),
 											isCredit: (+debit - +credit) < 0 ? 1 : 0,
-											amount: (+debit - +credit),
+											amount: Math.abs(+debit - +credit),
 											entityName: entityName
 										});
 										console.log(transactionResult);
