@@ -108,7 +108,7 @@ exports.handler = function (event, context, callback) {
 											amount: (+debit - +credit),
 											entityName: entityName
 										});
-
+										console.log(results);
 										results.forEach(result => {
 										transactions.push({
 											trId: result.transaction_id,
