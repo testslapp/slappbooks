@@ -6,7 +6,9 @@ exports.handler = function (event, context, callback) {
 
 	postObject = event;
 	transactions = postObject.transactions;
-	conversions = postObject.conversions;
+	let conversions = [];
+	conversions = postObject.conversions.slice();
+	console.log(conversions);
 
 	transactions.forEach((transaction, index) => {
 		if ((transaction.amount).toString().startsWith("(") && transaction.amount.toString().endsWith(")")) {
