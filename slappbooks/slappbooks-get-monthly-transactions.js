@@ -1,0 +1,149 @@
+let AWS = require('aws-sdk');
+let connectionManager = require('./ConnectionManager');
+let SL = require('@slappforge/slappforge-sdk');
+const rds = new SL.AWS.RDS(connectionManager);
+exports.handler = function (event, context, callback) {
+	let postObject = event;
+	let entityName = postObject.entity;
+	let pageNo = postObject.page;
+	let pageSize = postObject.pageSize;
+	let sorted = postObject.sorted;
+	let filtered = postObject.filtered;
+	let startIndex = +pageNo * +pageSize;
+	let endIndex = startIndex + pageSize;
+	let pageNumber = 1;
+	let year = postObject.year;
+	let month = postObject.month;
+
+	// Replace the query with the actual query
+	// You can pass the existing connection to this function.
+	// A new connection will be creted if it's not present as the third param 
+	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date BETWEEN ?-?-01 AND ?-?-31  LIMIT ?,?';
+
+
+	// Replace the query with the actual query
+	// You can pass the existing connection to this function.
+	// A new connection will be creted if it's not present as the third param 
+	rds.query({
+		instanceIdentifier: 'slappbooksdb',
+		query: 'SELECT count(*) as count FROM transaction;'
+	}, function (error, results, connection) {
+		if (error) {
+			console.log("Error occurred while retrieving count");
+			throw error;
+		} else {
+			console.log("Successfully obtained database count");
+			console.log(results[0].count);
+			pageNumber = Math.ceil(parseFloat(results[0].count) / parseFloat(pageSize));
+
+			// Replace the query with the actual query
+			// You can pass the existing connection to this function.
+			// A new connection will be creted if it's not present as the third param 
+			rds.query({
+				instanceIdentifier: 'slappbooksdb',
+				query: sql,
+				inserts: [entityName, year, month, year, month, startIndex, pageSize]
+			}, function (error, results, connection) {
+				if (error) {
+					console.log("Error occurred while retreiving transactions", error);
+					throw error;
+				} else {
+					let transactions = [];
+					console.log("Successfully retreived transactions");
+					if (startIndex == 0) {
+
+						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND E.is_credit = 0 AND date < ?-?-01';
+						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND E.is_credit = 1 AND date < ?-?-01';
+						// Replace the query with the actual query
+						// You can pass the existing connection to this function.
+						// A new connection will be creted if it's not present as the third param 
+						rds.query({
+							instanceIdentifier: 'slappbooksdb',
+							query: debitSql,
+							inserts: [entityName, year, month]
+						}, function (error, resultDebit, connection) {
+							if (error) {
+								console.log("Error occurred while counting debit transactions", error);
+								throw error;
+							} else {
+								console.log("Successfully retreived debit transactions");
+								console.log(resultDebit);
+								let debit = resultDebit[0].debit;
+
+
+								// Replace the query with the actual query
+								// You can pass the existing connection to this function.
+								// A new connection will be creted if it's not present as the third param 
+								rds.query({
+									instanceIdentifier: 'slappbooksdb',
+									query: creditSql,
+									inserts: [entityName, year, month]
+								}, function (error, resultCredit, connection) {
+									if (error) {
+										console.log("Error occurred while counting credti transactions", error);
+										throw error;
+									} else {
+										console.log("Successfully retrieved credit transactions");
+										console.log(resultCredit);
+										let credit = resultCredit[0].credit;
+										transactions.push({
+											trId: result.transaction_id,
+											date: year.concat("-").concat(month).concat("-01"),
+											isCredit: (+debit - +credit) < 0 ? 1 : 0,
+											amount: (+debit - +credit),
+											entityName: entityName
+										});
+
+										results.forEach(result => {
+										transactions.push({
+											trId: result.transaction_id,
+											date: result.date,
+											checkNo: result.cheque_no,
+											voucherNo: result.voucher_no,
+											isCredit: result.is_credit,
+											amount: result.amount,
+											notes: result.notes,
+											reconcile: result.reconcile,
+											setId: result.set_id,
+											entityName: entityName
+										});
+									});
+									let finalResult = { rows: transactions, pages: pageNumber }
+									console.log(finalResult);
+									connection.end();
+									callback(null, finalResult);
+									}
+								}, connection);
+
+							}
+						}, connection);
+
+					} else {
+						results.forEach(result => {
+						transactions.push({
+							trId: result.transaction_id,
+							date: result.date,
+							checkNo: result.cheque_no,
+							voucherNo: result.voucher_no,
+							isCredit: result.is_credit,
+							amount: result.amount,
+							notes: result.notes,
+							reconcile: result.reconcile,
+							setId: result.set_id,
+							entityName: entityName
+						});
+					});
+					let finalResult = { rows: transactions, pages: pageNumber }
+					console.log(finalResult);
+					connection.end();
+					callback(null, finalResult);
+					}
+					
+				}
+			}, connection);
+
+		}
+	});
+
+	callback(null, 'Successfully executed');
+}
