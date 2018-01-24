@@ -24,7 +24,7 @@ exports.handler = function (event, context, callback) {
 					isCredit: result.value < 0 ? true: false,
 					value: result.value
 				}
-				entries.push(entity);
+				entries.push(entry);
 				connection.end();
 				callback(error, entries);
 			});
