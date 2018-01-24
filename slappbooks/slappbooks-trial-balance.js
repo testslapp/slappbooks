@@ -25,9 +25,9 @@ exports.handler = function (event, context, callback) {
 					value: result.value
 				}
 				entries.push(entry);
-				connection.end();
-				callback(error, entries);
 			});
+			connection.end();
+			callback(error, entries);
 		}
 	});
 
