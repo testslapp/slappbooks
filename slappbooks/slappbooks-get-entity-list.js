@@ -31,7 +31,7 @@ exports.handler = function (event, context, callback) {
 			callback(error, {
 					"statusCode": 200,
 					"headers": {
-						"my_header": "my_value",
+						"app_header": "slappbooks",
 						"Access-Control-Allow-Origin": "*"
 					},
 					"body": JSON.stringify(entities),

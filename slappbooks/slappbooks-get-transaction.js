@@ -37,15 +37,15 @@ exports.handler = function (event, context, callback) {
             });
             console.log(transactions);
             connection.end();
-             callback(null, {
-                        "statusCode": 200,
-                        "headers": {
-                            "my_header": "my_value",
-                            "Access-Control-Allow-Origin": "*"
-                        },
-                        "body": JSON.stringify(transactions),
-                        "isBase64Encoded": false
-                    });
+            callback(null, {
+                    "statusCode": 200,
+                    "headers": {
+                        "app_header": "slappbooks",
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    "body": JSON.stringify(transactions),
+                    "isBase64Encoded": false
+                });
         }
     });
 }
