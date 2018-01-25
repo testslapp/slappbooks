@@ -5,12 +5,15 @@ const rds = new SL.AWS.RDS(connectionManager);
 
 exports.handler = function (event, context, callback) {
 
+	let spotRate = event.spotRate;
     let entries = [];
-	let sql = "SELECT E.name AS name, SUM( IF(T.is_credit='1', -1*T.amount, T.amount)) AS value FROM transaction T INNER JOIN entity E on T.entity_id=E.id GROUP BY E.id;";
+	let sql = "SELECT E.name AS name, ABS(SUM( IF(T.is_credit='1', -1*(IF(E.currency!='LKR', T.amount*?, T.amount)), " + 
+	"IF(E.currency!='LKR', T.amount*?, T.amount)))) AS value FROM transaction T INNER JOIN entity E on" +
+	" T.entity_id=E.id LEFT JOIN conversion C on T.transaction_id=C.transaction_id GROUP BY E.id;";
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
 		query: sql,
-		inserts: []
+		inserts: [spotRate, spotRate]
 	}, function (error, results, connection) {
 		if (error) {
 			console.log("Error occurred while preparing the trial balance", error);
