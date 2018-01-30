@@ -44,6 +44,7 @@ exports.handler = function (event, context, callback) {
 						if (error) {
 							connection.rollback();
 							console.log("Error occurred while inserting the transaction", error);
+							callback(error, JSON.stringify(event));
 							throw error;
 						} else {
 							console.log("Successfully inserted the transaction")
@@ -52,6 +53,7 @@ exports.handler = function (event, context, callback) {
 
 						if(index === transactions.length) {
 							connection.end();
+							callback(error, JSON.stringify(event));
 						}
 					}, connection);
 
@@ -63,7 +65,4 @@ exports.handler = function (event, context, callback) {
 		});
 
 	});
-
-
-	callback(null, JSON.stringify(event));
 }
