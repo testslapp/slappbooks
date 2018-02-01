@@ -23,13 +23,13 @@ exports.handler = function (event, context, callback) {
 				connection.rollback();
 				connection.end();
 				console.log("Error occurred while deleting the transaction with set id", setId, error);
-				callback(error, JSON.stringify({result: 'failed'}));
+				callback(error, JSON.stringify(event));
 				throw error;
 			} else {
 				connection.commit();
 				connection.end();
 				console.log("Successfully deleted the transaction with set id", setId);
-				callback(error, JSON.stringify({result: 'success'}));
+				callback(error, JSON.stringify(event));
 			}
 		});
 
