@@ -35,5 +35,4 @@ exports.handler = function (event, context, callback) {
 		connection.end();
 		callback(error, entries);
 	});
-
 }

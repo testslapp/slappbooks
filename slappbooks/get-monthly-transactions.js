@@ -132,12 +132,10 @@ exports.handler = function (event, context, callback) {
 					let finalResult = { rows: transactions, pages: pageNumber }
 					console.log(finalResult);
 					connection.end();
-					callback(null, finalResult);
-				  	}
-					
+					callback(error, finalResult);
+				  	}		
 				}
 			}, connection);
-
 		}
 	});
 }

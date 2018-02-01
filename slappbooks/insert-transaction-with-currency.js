@@ -23,9 +23,9 @@ exports.handler = function (event, context, callback) {
 	}, function (error, connection) {
 		if (error) { throw err; }
 
-		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes,' + 
+		' reconcile) VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach((transaction, index) => {
-
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
@@ -54,7 +54,6 @@ exports.handler = function (event, context, callback) {
 						} else {
 							console.log("Successfully inserted the transaction")
 							console.log(results);
-
 							sql = 'INSERT INTO conversion (transaction_id, to_currency, from_currency, rate) VALUES (?,?,?,?)';
 							
 							rds.query({
@@ -72,7 +71,6 @@ exports.handler = function (event, context, callback) {
 									console.log(results);
 								}
 							}, connection);
-
 						}
 
 						if (index === transactions.length - 1) {

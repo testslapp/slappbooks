@@ -17,11 +17,10 @@ exports.handler = function (event, context, callback) {
 		instanceIdentifier: 'slappbooksdb'
 	}, function (error, connection) {
 		if (error) { throw err; }
-
 		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile)' + 
 		' VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
-		transactions.forEach( (transaction, index) => {
 
+		transactions.forEach( (transaction, index) => {
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
