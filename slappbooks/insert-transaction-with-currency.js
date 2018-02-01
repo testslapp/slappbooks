@@ -71,7 +71,7 @@ exports.handler = function (event, context, callback) {
 									console.log("Successfully inserted a conversion object");
 									console.log(results);
 								}
-							});
+							}, connection);
 
 						}
 

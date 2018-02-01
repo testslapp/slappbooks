@@ -49,7 +49,6 @@ exports.handler = function (event, context, callback) {
 									console.log("Successfully updated the transaction");
 									connection.commit();
 									connection.end();
-									console.log(results);
 									callback(error, JSON.stringify(event));
 								}
 							}, connection);
