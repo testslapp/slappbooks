@@ -13,13 +13,13 @@ exports.handler = function (event, context, callback) {
 		transaction.isCredit = transaction.isCredit ? 1 : 0;
 	});
 
-
 	rds.beginTransaction({
 		instanceIdentifier: 'slappbooksdb'
 	}, function (error, connection) {
 		if (error) { throw err; }
 
-		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile) VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes, reconcile)' + 
+		' VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach( (transaction, index) => {
 
 			rds.query({
@@ -39,7 +39,8 @@ exports.handler = function (event, context, callback) {
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
-						inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
+						inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, 
+						transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
@@ -57,13 +58,9 @@ exports.handler = function (event, context, callback) {
 							callback(error, JSON.stringify(event));
 						}
 					}, connection);
-
 				}
-
 			}, connection);
-
 			connection.commit();
 		});
-
 	});
 }
