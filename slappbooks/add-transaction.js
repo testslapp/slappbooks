@@ -51,7 +51,7 @@ exports.handler = function (event, context, callback) {
 							console.log(results);
 						}
 
-						if(index === transactions.length) {
+						if(index === transactions.length - 1) {
 							console.log("ending connection", index);
 							connection.end();
 							callback(error, JSON.stringify(event));
