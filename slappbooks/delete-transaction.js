@@ -29,9 +29,9 @@ exports.handler = function (event, context, callback) {
 				connection.commit();
 				connection.end();
 				console.log("Successfully deleted the transaction with set id", setId);
-				callback(error, JSON.stringify(event));
+				callback(null, JSON.stringify(event));
 			}
-		});
+		}, connection);
 
 	});
 }
