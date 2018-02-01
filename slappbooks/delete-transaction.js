@@ -21,19 +21,18 @@ exports.handler = function (event, context, callback) {
 		}, function (error, results, connection) {
 			if (error) {
 				connection.rollback();
+				connection.end();
 				console.log("Error occurred while deleting the transaction", error);
+				callback(error, JSON.stringify({result: 'failed'}));
 				throw error;
 			} else {
 				console.log("Successfully deleted the transaction");
 				connection.commit();
 				console.log(results);
+				connection.end();
+				callback(error, JSON.stringify({result: 'failed'}));
 			}
-
-			connection.end();
 		});
 
 	});
-
-
-	callback(null, 'Successfully executed');
 }
