@@ -33,19 +33,18 @@ exports.handler = function (event, context, callback) {
 					if (error) {
 						connection.rollback();
 						console.log("Error occurred while deleting the entity");
+						callback(error, JSON.stringify(event));
 						throw error;
 					} else {
 						connection.commit();
 						console.log("Successfully deleted the entity");
-						console.log(results);
 						connection.end();
+						callback(error, JSON.stringify(event));
 					}
 
 				}, connection);
 			}
-		});
+		}, connection);
 
 	});
-
-	callback(null, 'Successfully executed');
 }

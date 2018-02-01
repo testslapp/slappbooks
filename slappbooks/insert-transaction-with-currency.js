@@ -34,6 +34,7 @@ exports.handler = function (event, context, callback) {
 				if (error) {
 					console.log("Error occurred while retreiving the entity id from the database", error);
 					connection.rollback();
+					connection.end();
 					throw error;
 				} else {
 					console.log("Successfully retrieved the entity id")
@@ -47,12 +48,12 @@ exports.handler = function (event, context, callback) {
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
+							connection.end();
 							console.log("Error occurred while inserting the transaction", error);
 							throw error;
 						} else {
 							console.log("Successfully inserted the transaction")
 							console.log(results);
-
 
 							sql = 'INSERT INTO conversion (transaction_id, to_currency, from_currency, rate) VALUES (?,?,?,?)';
 							
@@ -63,33 +64,25 @@ exports.handler = function (event, context, callback) {
 							}, function (error, results, connection) {
 								if (error) {
 									connection.rollback();
+									connection.end();
 									console.log("Error occurred while inserting conversions");
 									throw error;
 								} else {
 									console.log("Successfully inserted a conversion object");
 									console.log(results);
 								}
-
-								connection.end();
 							});
 
 						}
 
-						if (index === transactions.length) {
+						if (index === transactions.length - 1) {
+							connection.commit();
 							connection.end();
+							callback(error, JSON.stringify(event));
 						}
 					}, connection);
-
-
-
 				}
-
 			}, connection);
-
-			connection.commit();
 		});
-
 	});
-
-	callback(null, JSON.stringify(event));
 }

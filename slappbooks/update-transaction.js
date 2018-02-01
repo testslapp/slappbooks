@@ -43,21 +43,19 @@ exports.handler = function (event, context, callback) {
 								if (error) {
 									connection.rollback();
 									console.log("Error occurred while updating the transaction", error);
+									callback(error, JSON.stringify(event));
 									throw error;
 								} else {
 									console.log("Successfully updated the transaction");
 									connection.commit();
 									connection.end();
 									console.log(results);
+									callback(error, JSON.stringify(event));
 								}
 							}, connection);
-
 						}
-
 					}, connection);
 			});
 		
 	});
-
-	callback(null, 'Successfully executed');
 }
