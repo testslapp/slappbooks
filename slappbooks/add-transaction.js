@@ -12,6 +12,7 @@ exports.handler = function (event, context, callback) {
 		}
 		transaction.isCredit = transaction.isCredit ? 1 : 0;
 	});
+	let entity_id;
 
 	rds.beginTransaction({
 		instanceIdentifier: 'slappbooksdb'
@@ -21,10 +22,11 @@ exports.handler = function (event, context, callback) {
 			' VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
 
 		transactions.forEach((transaction, index) => {
+			let entityArray =  [transaction.entityName];
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
-				inserts: [transaction.entityName]
+				inserts: entityArray
 			}, function (error, results, connection) {
 				if (error) {
 					console.log("Error occurred while retreiving the entity id from the database", error);
@@ -32,14 +34,15 @@ exports.handler = function (event, context, callback) {
 					throw error;
 				} else {
 					console.log("Successfully retrieved the entity id")
-					let entity_id = results[0].id;
+					entity_id = results[0].id;
 					console.log(transaction.trId);
 
+                    let transactionInsertArray = [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo,
+						transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile];
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
-						inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo,
-						transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile]
+						inserts: transactionInsertArray
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
