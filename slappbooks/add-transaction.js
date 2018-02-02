@@ -22,7 +22,7 @@ exports.handler = function (event, context, callback) {
 			' VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
 
 		transactions.forEach((transaction, index) => {
-			let entityArray =  [transaction.entityName];
+			let entityArray = [transaction.entityName];
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
@@ -37,8 +37,8 @@ exports.handler = function (event, context, callback) {
 					entity_id = results[0].id;
 					console.log(transaction.trId);
 
-                    let transactionInsertArray = [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo,
-						transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile];
+					let transactionInsertArray = [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo,
+					transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile];
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
