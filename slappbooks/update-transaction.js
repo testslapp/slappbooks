@@ -18,9 +18,10 @@ exports.handler = function (event, context, callback) {
 	}, function (error, connection) {
 		if (error) { connection.rollback(); throw error; }
 
-		let entityArray = [transaction.entityName];
 		// Insert transactions to the database  
 		transactions.forEach((transaction, index) => {
+			let entityArray = [transaction.entityName];
+			
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
