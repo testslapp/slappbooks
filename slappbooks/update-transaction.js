@@ -16,14 +16,15 @@ exports.handler = function (event, context, callback) {
 	rds.beginTransaction({
 		instanceIdentifier: 'slappbooksdb'
 	}, function (error, connection) {
-		if (error) { connection.rollback(); throw err; }
+		if (error) { connection.rollback(); throw error; }
 
+		let entityArray = [transaction.entityName];
 		// Insert transactions to the database  
 		transactions.forEach((transaction, index) => {
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: 'SELECT id FROM entity WHERE name = ?',
-				inserts: [transaction.entityName]
+				inserts: entityArray
 			}, function (error, results, connection) {
 				if (error) {
 					console.log("Error occurred while retreiving the entity id from the database", error);
@@ -35,10 +36,11 @@ exports.handler = function (event, context, callback) {
 					console.log(transaction.trId);
 
 					let sql = 'UPDATE transaction SET transaction_id=?, set_id=?, date=?, entity_id=?, is_credit=?, cheque_no=?, voucher_no=?, amount=?, notes=?, reconcile=? WHERE transaction_id=?';
+					let updateArray = [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile, transaction.trId];
 					rds.query({
 						instanceIdentifier: 'slappbooksdb',
 						query: sql,
-						inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile, transaction.trId]
+						inserts: updateArray
 					}, function (error, results, connection) {
 						if (error) {
 							connection.rollback();
