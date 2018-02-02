@@ -7,9 +7,9 @@ exports.handler = function (event, context, callback) {
 
     let transactionId = event.queryStringParameters.id;
 
-    sql = 'SELECT T.transaction_id, T.set_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name FROM ' + 
-    'transaction T INNER JOIN entity E on T.entity_id=E.id where T.set_id=?;';    
-    
+    sql = 'SELECT T.transaction_id, T.set_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name FROM ' +
+        'transaction T INNER JOIN entity E on T.entity_id=E.id where T.set_id=?;';
+
     rds.query({
         instanceIdentifier: 'slappbooksdb',
         query: sql,
@@ -38,14 +38,14 @@ exports.handler = function (event, context, callback) {
             console.log(transactions);
             connection.end();
             callback(null, {
-                    "statusCode": 200,
-                    "headers": {
-                        "app_header": "slappbooks",
-                        "Access-Control-Allow-Origin": "*"
-                    },
-                    "body": JSON.stringify(transactions),
-                    "isBase64Encoded": false
-                });
+                "statusCode": 200,
+                "headers": {
+                    "app_header": "slappbooks",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "body": JSON.stringify(transactions),
+                "isBase64Encoded": false
+            });
         }
     });
 }

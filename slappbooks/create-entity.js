@@ -17,12 +17,12 @@ exports.handler = function (event, context, callback) {
 		if (error) {
 			console.log("Error occurred while inserting the entity", error);
 			connection.end();
-			callback(error, JSON.stringify({error: "Error occurred while inserting the entity"}));
+			callback(error, JSON.stringify({ error: "Error occurred while inserting the entity" }));
 			throw error;
 		} else {
 			console.log("Successfully inserted the entity");
 			connection.end();
-			callback(error, JSON.stringify({success: "successfully created the entity"}));
+			callback(error, JSON.stringify({ success: "successfully created the entity" }));
 		}
 	});
 }

@@ -91,23 +91,23 @@ exports.handler = function (event, context, callback) {
 										});
 										console.log(transactionResult);
 										transactionResult.forEach(result => {
-										transactions.push({
-											trId: result.transaction_id,
-											date: result.date,
-											checkNo: result.cheque_no,
-											voucherNo: result.voucher_no,
-											isCredit: result.is_credit,
-											amount: result.amount,
-											notes: result.notes,
-											reconcile: result.reconcile,
-											setId: result.set_id,
-											entityName: entityName
+											transactions.push({
+												trId: result.transaction_id,
+												date: result.date,
+												checkNo: result.cheque_no,
+												voucherNo: result.voucher_no,
+												isCredit: result.is_credit,
+												amount: result.amount,
+												notes: result.notes,
+												reconcile: result.reconcile,
+												setId: result.set_id,
+												entityName: entityName
+											});
 										});
-									});
-									let finalResult = { rows: transactions, pages: pageNumber }
-									console.log(finalResult);
-									connection.end();
-									callback(null, finalResult);
+										let finalResult = { rows: transactions, pages: pageNumber }
+										console.log(finalResult);
+										connection.end();
+										callback(null, finalResult);
 									}
 								}, connection);
 
@@ -116,24 +116,24 @@ exports.handler = function (event, context, callback) {
 
 					} else {
 						results.forEach(result => {
-						transactions.push({
-							trId: result.transaction_id,
-							date: result.date,
-							checkNo: result.cheque_no,
-							voucherNo: result.voucher_no,
-							isCredit: result.is_credit,
-							amount: result.amount,
-							notes: result.notes,
-							reconcile: result.reconcile,
-							setId: result.set_id,
-							entityName: entityName
+							transactions.push({
+								trId: result.transaction_id,
+								date: result.date,
+								checkNo: result.cheque_no,
+								voucherNo: result.voucher_no,
+								isCredit: result.is_credit,
+								amount: result.amount,
+								notes: result.notes,
+								reconcile: result.reconcile,
+								setId: result.set_id,
+								entityName: entityName
+							});
 						});
-					});
-					let finalResult = { rows: transactions, pages: pageNumber }
-					console.log(finalResult);
-					connection.end();
-					callback(error, finalResult);
-				  	}		
+						let finalResult = { rows: transactions, pages: pageNumber }
+						console.log(finalResult);
+						connection.end();
+						callback(error, finalResult);
+					}
 				}
 			}, connection);
 		}

@@ -18,7 +18,7 @@ exports.handler = function (event, context, callback) {
 
 	// Retrieve all transactions limited by the start index and page size
 	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? LIMIT ?,?';
-	
+
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
 		query: 'SELECT count(*) as count FROM transaction;'
@@ -30,8 +30,8 @@ exports.handler = function (event, context, callback) {
 			console.log("Successfully obtained database count");
 			console.log(results[0].count);
 			pageNumber = Math.ceil(parseFloat(results[0].count) / parseFloat(pageSize));
-			
-				rds.query({
+
+			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: sql,
 				inserts: [entityName, startIndex, pageSize]
@@ -56,7 +56,7 @@ exports.handler = function (event, context, callback) {
 							entityName: entityName
 						});
 					});
-					let finalResult = { rows: transactions, pages: pageNumber}
+					let finalResult = { rows: transactions, pages: pageNumber }
 					console.log(finalResult);
 					connection.end();
 					callback(error, finalResult);

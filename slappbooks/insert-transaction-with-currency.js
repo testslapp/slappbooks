@@ -23,8 +23,8 @@ exports.handler = function (event, context, callback) {
 	}, function (error, connection) {
 		if (error) { throw err; }
 
-		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes,' + 
-		' reconcile) VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
+		let sql = 'INSERT INTO transaction (transaction_id, set_id, date, entity_id, is_credit, cheque_no, voucher_no, amount, notes,' +
+			' reconcile) VALUES (?,?,?,?,?, ?, ?, ?, ?, ?);'
 		transactions.forEach((transaction, index) => {
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
@@ -40,7 +40,7 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retrieved the entity id")
 					let entity_id = results[0].id;
 					console.log(transaction.trId);
-					
+
 					rds.query({
 						identifier: 'slappbooksdb',
 						query: sql,
@@ -55,11 +55,11 @@ exports.handler = function (event, context, callback) {
 							console.log("Successfully inserted the transaction")
 							console.log(results);
 							sql = 'INSERT INTO conversion (transaction_id, to_currency, from_currency, rate) VALUES (?,?,?,?)';
-							
+
 							rds.query({
 								instanceIdentifier: 'slappbooksdb',
 								query: sql,
-								inserts: [transaction.trId, conversions[index]._toCurrency,  conversions[index]._fromCurrency, conversions[index]._conversionRate]
+								inserts: [transaction.trId, conversions[index]._toCurrency, conversions[index]._fromCurrency, conversions[index]._conversionRate]
 							}, function (error, results, connection) {
 								if (error) {
 									connection.rollback();

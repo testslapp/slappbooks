@@ -29,14 +29,14 @@ exports.handler = function (event, context, callback) {
 			console.log(entities);
 			connection.end();
 			callback(error, {
-					"statusCode": 200,
-					"headers": {
-						"app_header": "slappbooks",
-						"Access-Control-Allow-Origin": "*"
-					},
-					"body": JSON.stringify(entities),
-					"isBase64Encoded": false
-				});
+				"statusCode": 200,
+				"headers": {
+					"app_header": "slappbooks",
+					"Access-Control-Allow-Origin": "*"
+				},
+				"body": JSON.stringify(entities),
+				"isBase64Encoded": false
+			});
 		}
 	});
 }

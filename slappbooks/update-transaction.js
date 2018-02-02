@@ -19,41 +19,41 @@ exports.handler = function (event, context, callback) {
 		if (error) { connection.rollback(); throw err; }
 
 		// Insert transactions to the database  
-		transactions.forEach( (transaction, index) => {
+		transactions.forEach((transaction, index) => {
 			rds.query({
-					instanceIdentifier: 'slappbooksdb',
-					query: 'SELECT id FROM entity WHERE name = ?',
-					inserts: [transaction.entityName]
-				}, function (error, results, connection) {
-					if (error) {
-						console.log("Error occurred while retreiving the entity id from the database", error);
-						connection.rollback();
-						throw error;
-					} else {
-						console.log("Successfully retrieved the entity id")
-						let entity_id = results[0].id;
-						console.log(transaction.trId);
-					
-						let sql = 'UPDATE transaction SET transaction_id=?, set_id=?, date=?, entity_id=?, is_credit=?, cheque_no=?, voucher_no=?, amount=?, notes=?, reconcile=? WHERE transaction_id=?';
-						rds.query({
-							instanceIdentifier: 'slappbooksdb',
-							query: sql,
-							inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile, transaction.trId ]
-						}, function (error, results, connection) {
-							if (error) {
-								connection.rollback();
-								console.log("Error occurred while updating the transaction", error);
-								callback(error, JSON.stringify(event));
-								throw error;
-							} else {
-								console.log("Successfully updated the transaction");
-								connection.commit();
-								connection.end();
-								callback(error, JSON.stringify(event));
-							}
-						}, connection);
-					}
-				}, connection);
-			});	
+				instanceIdentifier: 'slappbooksdb',
+				query: 'SELECT id FROM entity WHERE name = ?',
+				inserts: [transaction.entityName]
+			}, function (error, results, connection) {
+				if (error) {
+					console.log("Error occurred while retreiving the entity id from the database", error);
+					connection.rollback();
+					throw error;
+				} else {
+					console.log("Successfully retrieved the entity id")
+					let entity_id = results[0].id;
+					console.log(transaction.trId);
+
+					let sql = 'UPDATE transaction SET transaction_id=?, set_id=?, date=?, entity_id=?, is_credit=?, cheque_no=?, voucher_no=?, amount=?, notes=?, reconcile=? WHERE transaction_id=?';
+					rds.query({
+						instanceIdentifier: 'slappbooksdb',
+						query: sql,
+						inserts: [transaction.trId, transaction.setId, transaction.date, entity_id, transaction.isCredit, transaction.checkNo, transaction.voucherNo, transaction.amount, transaction.notes, transaction.reconcile, transaction.trId]
+					}, function (error, results, connection) {
+						if (error) {
+							connection.rollback();
+							console.log("Error occurred while updating the transaction", error);
+							callback(error, JSON.stringify(event));
+							throw error;
+						} else {
+							console.log("Successfully updated the transaction");
+							connection.commit();
+							connection.end();
+							callback(error, JSON.stringify(event));
+						}
+					}, connection);
+				}
+			}, connection);
+		});
 	});
 }
