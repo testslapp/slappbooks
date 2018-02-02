@@ -49,7 +49,7 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
-						amountSql = 'SELECT SUM( IF (T.is_credit='1', -1*amount, amount) ) as amount FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date < ?';
+						amountSql = 'SELECT SUM( IF (T.is_credit = 1, -1 * amount,  amount) ) as amount FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date < ?;';
 						// Generate the required credit and debit balances to formulate the balance brought forward query
 						rds.query({
 							instanceIdentifier: 'slappbooksdb',
