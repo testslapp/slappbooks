@@ -13,11 +13,12 @@ exports.handler = function (event, context, callback) {
 		if (error) { throw err; }
 
 		let sql = 'DELETE FROM transaction WHERE set_id=?';
+		let setIdArray = [setId];
 		// Delete a transaction from the database
 		rds.query({
 			instanceIdentifier: 'slappbooksdb',
 			query: sql,
-			inserts: [setId]
+			inserts: setIdArray
 		}, function (error, results, connection) {
 			if (error) {
 				connection.rollback();

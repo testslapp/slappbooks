@@ -19,11 +19,11 @@ exports.handler = function (event, context, callback) {
 
 	// retrieve transactions between the selected time frame
 	let sql = 'SELECT * FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name =? AND date BETWEEN ? AND ?  LIMIT ?,?';
-
+	let entityArray = [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31")];
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
 		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name=? AND date BETWEEN ? AND ?',
-		inserts: [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31")]
+		inserts: entityArray
 	}, function (error, results, connection) {
 		if (error) {
 			console.log("Error occurred while retrieving count");
@@ -33,11 +33,12 @@ exports.handler = function (event, context, callback) {
 			console.log(results[0].count);
 			pageNumber = Math.ceil(parseFloat(results[0].count) / parseFloat(pageSize));
 
+			let transactionQueryArray = [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31"), startIndex, pageSize];
 			// retrieve transactions between a given time frame
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: sql,
-				inserts: [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31"), startIndex, pageSize]
+				inserts: transactionQueryArray
 			}, function (error, results, connection) {
 				if (error) {
 					console.log("Error occurred while retreiving transactions", error);
@@ -49,12 +50,13 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
-						amountSql = 'SELECT SUM( IF (T.is_credit = 1, -1 * amount,  amount) ) as amount FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date < ?;';
+						let amountSql = 'SELECT SUM( IF (T.is_credit = 1, -1 * amount,  amount) ) as amount FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date < ?;';
+						let amountQueryArray = [entityName, year.concat("-").concat(month).concat("-01")];
 						// Generate the required credit and debit balances to formulate the balance brought forward query
 						rds.query({
 							instanceIdentifier: 'slappbooksdb',
 							query: amountSql,
-							inserts: [entityName, year.concat("-").concat(month).concat("-01")]
+							inserts: amountQueryArray
 						}, function (error, resultAmount, connection) {
 							if (error) {
 								console.log("Error occurred while retrieving the amount as balance brought forward", error);
