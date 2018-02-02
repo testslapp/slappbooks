@@ -10,6 +10,7 @@ exports.handler = function (event, context, callback) {
     let sql = 'SELECT T.transaction_id, T.set_id, T.date, T.cheque_no, T.is_credit, T.amount, T.notes, T.reconcile, E.name FROM ' +
         'transaction T INNER JOIN entity E on T.entity_id=E.id where T.set_id=?;';
     let transactionIdArray = [transactionId];
+    
     rds.query({
         instanceIdentifier: 'slappbooksdb',
         query: sql,

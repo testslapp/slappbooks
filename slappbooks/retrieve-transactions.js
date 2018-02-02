@@ -31,10 +31,11 @@ exports.handler = function (event, context, callback) {
 			console.log(results[0].count);
 			pageNumber = Math.ceil(parseFloat(results[0].count) / parseFloat(pageSize));
 
+			let queryArray = [entityName, startIndex, pageSize];
 			rds.query({
 				instanceIdentifier: 'slappbooksdb',
 				query: sql,
-				inserts: [entityName, startIndex, pageSize]
+				inserts: queryArray
 			}, function (error, results, connection) {
 				if (error) {
 					console.log("Error occurred while retreiving transactions", error);
