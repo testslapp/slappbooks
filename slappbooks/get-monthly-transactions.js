@@ -22,8 +22,8 @@ exports.handler = function (event, context, callback) {
 
 	rds.query({
 		instanceIdentifier: 'slappbooksdb',
-		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name=?',
-		inserts: [entityName]
+		query: 'SELECT count(*) as count FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name=? AND date BETWEEN ? AND ?',
+		inserts: [entityName, year.concat("-").concat(month).concat("-01"), year.concat("-").concat(month).concat("-31")]
 	}, function (error, results, connection) {
 		if (error) {
 			console.log("Error occurred while retrieving count");
@@ -49,68 +49,49 @@ exports.handler = function (event, context, callback) {
 					console.log("Successfully retreived transactions");
 					if (startIndex == 0) {
 
-						debitSql = 'SELECT SUM(amount) as debit  FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 0 AND date < ?';
-						creditSql = 'SELECT SUM(amount) as credit FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND T.is_credit = 1 AND date < ?';
+						amountSql = 'SELECT SUM( IF (T.is_credit='1', -1*amount, amount) ) as amount FROM transaction T INNER JOIN entity E ON T.entity_id = E.id WHERE E.name = ? AND date < ?';
 						// Generate the required credit and debit balances to formulate the balance brought forward query
 						rds.query({
 							instanceIdentifier: 'slappbooksdb',
-							query: debitSql,
+							query: amountSql,
 							inserts: [entityName, year.concat("-").concat(month).concat("-01")]
-						}, function (error, resultDebit, connection) {
+						}, function (error, resultAmount, connection) {
 							if (error) {
-								console.log("Error occurred while retrieving debit transactions", error);
+								console.log("Error occurred while retrieving the amount as balance brought forward", error);
 								throw error;
 							} else {
-								console.log("Successfully retreived debit transactions");
-								console.log(resultDebit);
-								let debit = resultDebit[0].debit;
+								console.log("Successfully retreived the amount as balance brought forward");
+								console.log(resultAmount);
+								let amount = resultAmount[0].amount;
+								amount = amount === null ? 0 : amount;
 
-
-								// Retrieve credit transactions from the database
-								rds.query({
-									instanceIdentifier: 'slappbooksdb',
-									query: creditSql,
-									inserts: [entityName, year.concat("-").concat(month).concat("-01")]
-								}, function (error, resultCredit, connection) {
-									if (error) {
-										console.log("Error occurred while retrieving credit transactions", error);
-										throw error;
-									} else {
-										console.log("Successfully retrieved credit transactions");
-										console.log(resultCredit);
-										let credit = resultCredit[0].credit;
-										credit = credit === null ? 0 : credit;
-										debit = debit === null ? 0 : debit;
-										transactions.push({
-											trId: '00000000000000000',
-											notes: 'Balance Brought Forward',
-											date: year.concat("-").concat(month).concat("-01"),
-											isCredit: (+debit - +credit) < 0 ? 1 : 0,
-											amount: Math.abs(+debit - +credit),
-											entityName: entityName
-										});
-										console.log(transactionResult);
-										transactionResult.forEach(result => {
-											transactions.push({
-												trId: result.transaction_id,
-												date: result.date,
-												checkNo: result.cheque_no,
-												voucherNo: result.voucher_no,
-												isCredit: result.is_credit,
-												amount: result.amount,
-												notes: result.notes,
-												reconcile: result.reconcile,
-												setId: result.set_id,
-												entityName: entityName
-											});
-										});
-										let finalResult = { rows: transactions, pages: pageNumber }
-										console.log(finalResult);
-										connection.end();
-										callback(null, finalResult);
-									}
-								}, connection);
-
+								transactions.push({
+									trId: '00000000000000000',
+									notes: 'Balance Brought Forward',
+									date: year.concat("-").concat(month).concat("-01"),
+									isCredit: amount < 0 ? 1 : 0,
+									amount: Math.abs(amount),
+									entityName: entityName
+								});
+								console.log(transactionResult);
+								transactionResult.forEach(result => {
+									transactions.push({
+										trId: result.transaction_id,
+										date: result.date,
+										checkNo: result.cheque_no,
+										voucherNo: result.voucher_no,
+										isCredit: result.is_credit,
+										amount: result.amount,
+										notes: result.notes,
+										reconcile: result.reconcile,
+										setId: result.set_id,
+										entityName: entityName
+									});
+								});
+								let finalResult = { rows: transactions, pages: pageNumber }
+								console.log(finalResult);
+								connection.end();
+								callback(null, finalResult);
 							}
 						}, connection);
 
